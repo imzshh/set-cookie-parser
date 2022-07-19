@@ -1,12 +1,12 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { parseResponse, parseString } from "./set_cookie_parser.ts";
+import { parseCookiesFromResponse, parseCookieFromString } from "./set_cookie_parser.ts";
 
 const { test } = Deno;
 
 test({
   name: "parseString: parse single cookie",
   fn(): void {
-    const actual = parseString("NAME=VALUE; Path=/; Expires=Tue, 18 Jul 2023 10:32:54 GMT;")
+    const actual = parseCookieFromString("NAME=VALUE; Path=/; Expires=Tue, 18 Jul 2023 10:32:54 GMT;")
     assertEquals(actual, {
       name: "NAME",
       value: "VALUE",
@@ -21,7 +21,7 @@ test({
   fn() {
     const response = new Response();
     response.headers.append("set-cookie", "NAME=VALUE;");
-    const actual = parseResponse(response);
+    const actual = parseCookiesFromResponse(response);
     assertEquals(actual, [
       {
         name: "NAME",
@@ -37,7 +37,7 @@ test({
     const response = new Response();
     response.headers.append("set-cookie", "NAME=VALUE;");
     response.headers.append("set-cookie", "FOO=BAR;");
-    const actual = parseResponse(response);
+    const actual = parseCookiesFromResponse(response);
     assertEquals(actual, [
       {
         name: "NAME",

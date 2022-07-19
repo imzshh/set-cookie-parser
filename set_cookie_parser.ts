@@ -27,7 +27,7 @@ function isNonEmptyString(str: string) {
   return typeof str === "string" && !!str.trim();
 }
 
-export function parseString(setCookieValue: string, options?: ParseOptions) : Cookie {
+export function parseCookieFromString(setCookieValue: string, options?: ParseOptions) : Cookie {
   const parts = setCookieValue.split(";").filter(isNonEmptyString);
   const part = parts.shift();
   if (!part) {
@@ -95,7 +95,7 @@ export interface ResponseLike {
   headers?: Headers
 }
 
-export function parseResponse(input: ResponseLike, options?: ParseOptions) : Record<string, Cookie> | Cookie[] {
+export function parseCookiesFromResponse(input: ResponseLike, options?: ParseOptions) : Record<string, Cookie> | Cookie[] {
   options = options
     ? Object.assign({}, defaultParseOptions, options)
     : defaultParseOptions;
@@ -128,16 +128,15 @@ export function parseResponse(input: ResponseLike, options?: ParseOptions) : Rec
   options = options
     ? Object.assign({}, defaultParseOptions, options)
     : defaultParseOptions;
-  console.log(setCookieValues)
 
   if (!options.map) {
     return setCookieValues.filter(isNonEmptyString).map(function (str) {
-      return parseString(str, options);
+      return parseCookieFromString(str, options);
     });
   } else {
     const cookies: Record<string, Cookie> = {};
     return setCookieValues.filter(isNonEmptyString).reduce(function (cookies, str) {
-      const cookie = parseString(str, options);
+      const cookie = parseCookieFromString(str, options);
       cookies[cookie.name] = cookie;
       return cookies;
     }, cookies);

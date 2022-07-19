@@ -7,7 +7,7 @@ test({
   name: "API assertions",
   fn() {
     assert(mod != null);
-    assertEquals(typeof mod.parseString, "function");
-    assertEquals(typeof mod.parseResponse, "function");
+    assertEquals(typeof mod.parseCookieFromString, "function");
+    assertEquals(typeof mod.parseCookiesFromResponse, "function");
   }
 });
